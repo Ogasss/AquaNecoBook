@@ -40,7 +40,7 @@ export const FormItem = defineComponent({
       type: Number,
       default: 60
     },
-    disabled: Boolean
+    disabled: Boolean,
   },
   emits: ['update:modelValue'],
   setup: (props, context) => {

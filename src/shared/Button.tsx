@@ -20,11 +20,18 @@ export const Button = defineComponent({
     disabled: {
       type: Boolean,
       default: false
+    },
+    autoSelfDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   setup: (props, context) => {
     const selfDisabled = ref(false)
     const _disabled = computed(()=>{
+      if(props.autoSelfDisabled === false){
+        return props.disabled
+      }
       if(selfDisabled.value){
         return true
       }else{

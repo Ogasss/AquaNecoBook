@@ -1,4 +1,5 @@
 import { defineComponent, reactive, ref } from 'vue';
+import { useBool } from '../hooks/useBool';
 import { MainLayout } from '../layouts/MainLayout';
 import { Button } from '../shared/Button';
 import { Form, FormItem } from '../shared/Form';
@@ -17,7 +18,7 @@ export const SignInPage = defineComponent({
       code: []
     })
     const refValidationCode = ref<any>()
-    const refValidationCodeDisabled = ref(false)
+    const { ref: refValidationCodeDisabled, toggle, on, off } = useBool(false)
     const onSubmit = (e: Event) => {
       e.preventDefault()
       Object.assign(errors, {
@@ -37,14 +38,11 @@ export const SignInPage = defineComponent({
       throw error
     }
     const onClickSendValidationCode = async () => {
-      refValidationCodeDisabled.value = true
+      on()
       const response = await http
         .post('/validation_codes', { email: formData.email })
         .catch(onError)
-        .finally(()=>{
-          refValidationCodeDisabled.value = false
-        })
-
+        .finally(off)
       refValidationCode.value.startCount()
     }
     return () => (
