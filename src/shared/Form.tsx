@@ -75,7 +75,7 @@ export const FormItem = defineComponent({
             <input class={[s.formItem, s.input, s.validationCodeInput]}
               placeholder={props.placeholder} />
             <Button disabled={isCounting.value} onClick={props.onClick} class={[s.formItem, s.button, s.validationCodeButton]}>
-              {isCounting.value ? `${count.value}秒后可重新发送` : '发送验证码'}
+              {isCounting.value ? count.value : '发送验证码'}
             </Button>
           </>
         case 'select':

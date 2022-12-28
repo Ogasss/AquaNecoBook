@@ -1,15 +1,15 @@
-import axios from 'axios';
-import { defineComponent, PropType, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { MainLayout } from '../layouts/MainLayout';
 import { Button } from '../shared/Button';
 import { Form, FormItem } from '../shared/Form';
+import { http } from '../shared/Http';
 import { Icon } from '../shared/Icon';
 import { validate } from '../shared/validate';
 import s from './SignInPage.module.scss';
 export const SignInPage = defineComponent({
   setup: (props, context) => {
     const formData = reactive({
-      email: '',
+      email: '2309704992@qq.com',
       code: ''
     })
     const errors = reactive({
@@ -29,12 +29,8 @@ export const SignInPage = defineComponent({
       ]))
     }
     const onClickSendValidationCode = async () => {
-      // const response = await axios.post('/api/v1/validation_codes', { email: formData.email })
-      //   .catch(()=>{
-      //     //失败
-      //   })
-      // // 成功
-      // refValidationCode.value.startCount()
+      const response = await http.post('/validation_codes', { email: formData.email })
+      refValidationCode.value.startCount()
     }
     return () => (
       <MainLayout>{
@@ -45,7 +41,6 @@ export const SignInPage = defineComponent({
             <div class={s.wrapper}>
               <div class={s.logo}>
                 <Icon class={s.icon} name="logo" />
-                <h1 class={s.appName}>蓝猫记账</h1>
               </div>
               <Form onSubmit={onSubmit}>
                 <FormItem label="邮箱地址" type="text"
@@ -53,7 +48,7 @@ export const SignInPage = defineComponent({
                   v-model={formData.email} error={errors.email?.[0]} />
                 <FormItem ref={refValidationCode} label="验证码" type="validationCode"
                   placeholder='请输入六位数字'
-                  countFrom={60}
+                  countFrom={10}
                   onClick={onClickSendValidationCode}
                   v-model={formData.code} error={errors.code?.[0]} />
                 <FormItem style={{ paddingTop: '96px' }}>
