@@ -67,5 +67,7 @@ export const useSwipe = (element: Ref<HTMLElement | undefined>, options?: Option
     swiping,
     direction,
     distance,
+    start,
+    end
   }
 }

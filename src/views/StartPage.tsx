@@ -17,7 +17,7 @@ export const StartPage = defineComponent({
           icon: () => <OverlayIcon />,
           default: () => <>
             <Center class={s.pig_wrapper}>
-              <Icon name="pig" class={s.pig} />
+              <Icon name="start" class={s.pig} />
             </Center>
             <div class={s.button_wrapper}>
               <RouterLink to="/items/create">
