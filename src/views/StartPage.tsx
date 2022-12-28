@@ -13,7 +13,7 @@ export const StartPage = defineComponent({
     return () => (
       <MainLayout>{
         {
-          title: () => '山竹记账',
+          title: () => '蓝猫记账',
           icon: () => <OverlayIcon />,
           default: () => <>
             <Center class={s.pig_wrapper}>
