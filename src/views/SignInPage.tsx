@@ -17,6 +17,7 @@ export const SignInPage = defineComponent({
       code: []
     })
     const refValidationCode = ref<any>()
+    const refValidationCodeDisabled = ref(false)
     const onSubmit = (e: Event) => {
       e.preventDefault()
       Object.assign(errors, {
@@ -36,9 +37,13 @@ export const SignInPage = defineComponent({
       throw error
     }
     const onClickSendValidationCode = async () => {
+      refValidationCodeDisabled.value = true
       const response = await http
         .post('/validation_codes', { email: formData.email })
         .catch(onError)
+        .finally(()=>{
+          refValidationCodeDisabled.value = false
+        })
 
       refValidationCode.value.startCount()
     }
@@ -59,6 +64,7 @@ export const SignInPage = defineComponent({
                 <FormItem ref={refValidationCode} label="验证码" type="validationCode"
                   placeholder='请输入六位数字'
                   countFrom={10}
+                  disabled={refValidationCodeDisabled.value}
                   onClick={onClickSendValidationCode}
                   v-model={formData.code} error={errors.code?.[0]} />
                 <FormItem style={{ paddingTop: '96px' }}>
