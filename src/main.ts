@@ -11,7 +11,7 @@ const router = createRouter({ history, routes })
 fetchMe()
 
 router.beforeEach(async (to, from)=> {
-    if(to.path === '/' || to.path === '/welcome' || to.path.startsWith('/sign_in') || to.path === '/start'){
+    if(['/','/start','/welcome'.includes(to.path) || to.path.startsWith('sign_in')]){
         return true
     }else{
         const path = mePromise!.then(
