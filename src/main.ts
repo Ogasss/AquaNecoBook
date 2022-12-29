@@ -14,7 +14,7 @@ router.beforeEach(async (to, from)=> {
     if(to.path === '/' || to.path === '/welcome' || to.path.startsWith('/sign_in') || to.path === '/start'){
         return true
     }else{
-        const path = await mePromise!.then(
+        const path = mePromise!.then(
             () => true,
             () => '/sign_in?return_to=' + to.path
         )
