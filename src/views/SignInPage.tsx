@@ -30,7 +30,7 @@ export const SignInPage = defineComponent({
         { key: 'code', type: 'required', message: '必填' },
       ]))
       if(!hasError(errors)){
-        const response = await http.post('/session', formData)
+        const response = await http.post<{jwt: string}>('/session', formData)
       }
     }
 
@@ -41,7 +41,7 @@ export const SignInPage = defineComponent({
       throw error
     }
     const onClickSendValidationCode = async () => {
-      on()
+      on() //激活按钮静默
       const response = await http
         .post('/validation_codes', { email: formData.email })
         .catch(onError)
