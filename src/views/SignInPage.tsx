@@ -1,4 +1,5 @@
 import { defineComponent, reactive, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useBool } from '../hooks/useBool';
 import { MainLayout } from '../layouts/MainLayout';
 import { Button } from '../shared/Button';
@@ -17,6 +18,8 @@ export const SignInPage = defineComponent({
       email: [],
       code: []
     })
+    const router = useRouter()
+    const route = useRoute()
     const refValidationCode = ref<any>()
     const { ref: refValidationCodeDisabled, toggle, on, off } = useBool(false)
     const onSubmit = async (e: Event) => {
@@ -31,6 +34,11 @@ export const SignInPage = defineComponent({
       ]))
       if(!hasError(errors)){
         const response = await http.post<{jwt: string}>('/session', formData)
+        .catch(onError)
+        localStorage.setItem('jwt',response.data.jwt)
+        // router.push('/sign_in?return_to='+ encodeURIComponent(route.fullPath))
+        const returnTo = route.query.return_to?.toString()
+        router.push(returnTo || '/')
       }
     }
 
