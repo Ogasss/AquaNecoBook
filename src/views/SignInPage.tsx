@@ -1,11 +1,12 @@
 import { defineComponent, reactive, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { useBool } from '../hooks/useBool';
 import { MainLayout } from '../layouts/MainLayout';
 import { Button } from '../shared/Button';
 import { Form, FormItem } from '../shared/Form';
 import { http } from '../shared/Http';
 import { Icon } from '../shared/Icon';
+import { refreshMe } from '../shared/me';
 import { hasError, validate } from '../shared/validate';
 import s from './SignInPage.module.scss';
 export const SignInPage = defineComponent({
@@ -38,6 +39,7 @@ export const SignInPage = defineComponent({
         localStorage.setItem('jwt',response.data.jwt)
         // router.push('/sign_in?return_to='+ encodeURIComponent(route.fullPath))
         const returnTo = route.query.return_to?.toString()
+        refreshMe().then
         router.push(returnTo || '/start')
       }
     }
@@ -60,7 +62,7 @@ export const SignInPage = defineComponent({
       <MainLayout>{
         {
           title: () => '登录',
-          icon: () => <Icon name="left" />,
+          icon: () => <RouterLink to="./"><Icon name="left" /></RouterLink>,
           default: () => (
             <div class={s.wrapper}>
               <div class={s.logo}>

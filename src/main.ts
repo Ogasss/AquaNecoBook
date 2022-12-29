@@ -4,25 +4,22 @@ import { App } from './App'
 import { createRouter } from 'vue-router'
 import { history } from './shared/history';
 import '@svgstore';
-import { http } from './shared/Http';
+import { mePromise, refreshMe, fetchMe } from './shared/me';
 
 const router = createRouter({ history, routes })
 
+fetchMe()
+
 router.beforeEach(async (to, from)=> {
-    if(to.path === '/' || to.path === '/welcome' || to.path.startsWith('/sign_in')){
+    if(to.path === '/' || to.path === '/welcome' || to.path.startsWith('/sign_in') || to.path === '/start'){
         return true
     }else{
-        await http.get('/me').catch(() => {
-         return '/sign_in?return_to='+ to.path
-        })
-        return true
+        const path = await mePromise!.then(
+            () => true,
+            () => '/sign_in?return_to=' + to.path
+        )
+        return path
     }
-    // beforeEnter: async (to, from, next) => {
-    //   await http.get('/me').catch(() => {
-    //     next('/sign_in?return_to='+ to.path)
-    //   })
-    //   next()
-    // },  
 })
 
 
