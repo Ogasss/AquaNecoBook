@@ -1,4 +1,5 @@
 import { defineComponent, PropType, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { MainLayout } from '../../layouts/MainLayout';
 import { Icon } from '../../shared/Icon';
 import { Tabs, Tab } from '../../shared/Tabs';
@@ -61,7 +62,7 @@ export const ItemCreate = defineComponent({
     return () => (
       <MainLayout class={s.layout}>{{
         title: () => '记一笔',
-        icon: () => <Icon name="left" class={s.navIcon} />,
+        icon: () => <RouterLink to='/start'><Icon name="left" class={s.navIcon} /></RouterLink>,
         default: () => <>
           <div class={s.wrapper}>
             <Tabs v-model:selected={refKind.value} class={s.tabs}>
