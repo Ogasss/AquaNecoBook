@@ -12,24 +12,36 @@ export const mockSession: Mock = (config) => {
 }
 
 export const mockTagIndex: Mock = (config) => {
+  const { kind, page } = config.params
+  const per_page = 25
+  const count = 26
   let id = 0
   const createId = () => {
     id += 1
     return id
   }
+  const createPage = (page = 1)=>({
+    page,
+    per_page,
+    count,
+  })
   const createTag = (n = 1, attrs?: any) =>
     Array.from({ length: n }).map(() => ({
       id: createId(),
       name: faker.lorem.word(),
       sign: faker.internet.emoji(),
-      kind: config.params.kind,
+      kind: kind,
       ...attrs
     }))
-
-  if (config.params.kind === 'expenses') {
-    return [200, { resources: createTag(7) }]
+  const createBody = (n = 1, attrs?: any) => ({
+    resources: createTag(n), pager: createPage(page)
+  })
+  if (kind === 'expenses' && (page === 1 || !page)) {
+    return [200, createBody(25)]
+  }else if(kind === 'expenses' && (page === 2)){
+    return [200,  createBody(1)]
   } else {
-    return [200, { resources: createTag(20) }]
+    return [200, { resources: createTag(34) }]
   }
 
 }

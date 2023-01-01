@@ -3,6 +3,18 @@
   flex-direction: column;
   height: calc(100vh - 88px);
 }
+.loadMoreWrapper{
+  margin-top: -16px;
+  padding-bottom: 16px;
+  text-align: center;
+  .loadMore{
+    opacity: 0.4;
+  }
+  .noMore{
+    color: #333;
+    opacity: 0.4;
+  }
+}
 .tabs {
   flex-grow: 1;
   flex-shrink: 1;
