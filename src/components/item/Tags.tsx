@@ -24,9 +24,6 @@ export const Tags = defineComponent({
         watch(page,()=>{
             loading.value = false
         })
-        watch(loading,()=>{
-            console.log(loading.value)
-        })
         return () => <>
         <div class={s.tags_wrapper}>
             <div class={s.tag}>
