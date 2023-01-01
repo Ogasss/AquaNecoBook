@@ -7,7 +7,9 @@ export const useTags = (fetcher: Fetcher) => {
     const hasMore = ref(false)
     const page = ref(0)
     const tags = ref<Tag[]>([])
+    const loading = ref(false)
     const fetchTags = async () => {
+      loading.value = true
       const response = await fetcher()
       const { resources, pager } = response.data
       tags.value.push(...resources)

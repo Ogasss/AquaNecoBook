@@ -43,7 +43,7 @@ export const Button = defineComponent({
       selfDisabled.value = true
       setTimeout(() => {
         selfDisabled.value = false
-      }, 500);
+      }, 1000);
     }
     return () => (
       <button disabled={_disabled.value} type={props.type} class={[s.button, s[props.level]]} onClick={onClick}>
