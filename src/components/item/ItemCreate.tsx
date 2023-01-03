@@ -1,56 +1,64 @@
-import { defineComponent, ref } from 'vue';
-import { RouterLink } from 'vue-router';
+import { Dialog } from 'vant';
+import { defineComponent, reactive, ref } from 'vue';
+import { RouterLink, useRouter } from 'vue-router';
 import { MainLayout } from '../../layouts/MainLayout';
 import { Button } from '../../shared/Button';
 import { http } from '../../shared/Http';
 import { Icon } from '../../shared/Icon';
 import { Tabs, Tab } from '../../shared/Tabs';
-import { useTags } from '../../shared/useTags';
 import { InputPad } from './InputPad';
 import s from './ItemCreate.module.scss';
 import { Tags } from './Tags';
 export const ItemCreate = defineComponent({
   setup: (props, context) => {
-    const refKind = ref('支出')
-    const refTagId = ref<number>()
-    const refHappenAt = ref<string>(new Date().toISOString())
-    const refAmount = ref<number>()
-    const { page, tags: expensesTags, hasMore, fetchTags } = useTags(()=>{
-      return http.get<Resources<Tag>>('/tags',{
-        kind: 'expenses',
-        page: page.value + 1,
-        _mock: 'tagIndex'
-      })
+    const formData = reactive({
+      kind: '支出',
+      tags_id:[0],
+      amount: 0,
+      happen_at: new Date().toISOString(),
     })
+    const router = useRouter()
+    const onSubmit = async () => {
+      await http.post<Resource<Item>>('/items',formData,
+      {params: {_mock: 'itemCreate'}}
+      )
+      .catch(error=>{
+        if(error.response.status === 422){
+          Dialog.alert({
+            title: '出错',
+            message: Object.values(error.response.data.errors).join('\n'),
+          })
+        }
+        throw error
+      })
+      router.push("/items")
+    }
 
-    const { page:page2, tags: incomeTags, hasMore: hasMore2, fetchTags:fetchTags2 } = useTags(()=>{
-      return http.get<Resources<Tag>>('/tags',{
-        kind: 'income',
-        page: page2.value + 1,
-        _mock: 'tagIndex'
-      })
-    })
-    
     return () => (
       <MainLayout class={s.layout}>{{
         title: () => '记一笔',
         icon: () => <RouterLink to='/start'><Icon name="left" class={s.navIcon} /></RouterLink>,
         default: () => <>
           <div class={s.wrapper}>
-            <div>{refAmount.value}</div>
-            <Tabs v-model:selected={refKind.value} class={s.tabs}>
+            {/* 测试代码 */}
+                {/* <div>{formData.kind}</div>
+                <div>{formData.tags_id[0]}</div>
+                <div>{formData.amount}</div>
+                <div>{formData.happen_at}</div> */}
+            <Tabs v-model:selected={formData.kind} class={s.tabs}>
               <Tab name="支出">
-                <Tags kind="expenses" v-model:selected={refTagId.value}/>
+                <Tags kind="expenses" v-model:selected={formData.tags_id[0]}/>
               </Tab>
               <Tab name="收入">
-                <Tags kind="income" v-model:selected={refTagId.value}/>
+                <Tags kind="income" v-model:selected={formData.tags_id[0]}/>
               </Tab>
             </Tabs> 
             <div class={s.inputPad_wrapper}>
               
               <InputPad 
-                v-model:happenAt={refHappenAt.value}
-                v-model:amount={refAmount.value}
+                v-model:happenAt={formData.happen_at}
+                v-model:amount={formData.amount}
+                onSubmit={onSubmit}
               />
             </div>
           </div>
