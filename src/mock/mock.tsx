@@ -10,16 +10,17 @@ export const mockSession: Mock = (config) => {
     jwt: faker.random.word()
   }]
 }
-
+let id = 0
+const createId = () => {
+  id += 1
+  return id
+}
 export const mockTagIndex: Mock = (config) => {
   const { kind, page } = config.params
   const per_page = 25
   const count = 26
-  let id = 0
-  const createId = () => {
-    id += 1
-    return id
-  }
+  
+  
   const createPage = (page = 1)=>({
     page,
     per_page,

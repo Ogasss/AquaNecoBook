@@ -12,7 +12,9 @@ import { Tags } from './Tags';
 export const ItemCreate = defineComponent({
   setup: (props, context) => {
     const refKind = ref('支出')
-
+    const refTagId = ref<number>()
+    const refHappenAt = ref<string>(new Date().toISOString())
+    const refAmount = ref<number>()
     const { page, tags: expensesTags, hasMore, fetchTags } = useTags(()=>{
       return http.get<Resources<Tag>>('/tags',{
         kind: 'expenses',
@@ -35,16 +37,21 @@ export const ItemCreate = defineComponent({
         icon: () => <RouterLink to='/start'><Icon name="left" class={s.navIcon} /></RouterLink>,
         default: () => <>
           <div class={s.wrapper}>
+            <div>{refAmount.value}</div>
             <Tabs v-model:selected={refKind.value} class={s.tabs}>
               <Tab name="支出">
-                <Tags kind="expenses" key="expenses"/>
+                <Tags kind="expenses" v-model:selected={refTagId.value}/>
               </Tab>
               <Tab name="收入">
-                <Tags kind="income" key="income"/>
+                <Tags kind="income" v-model:selected={refTagId.value}/>
               </Tab>
-            </Tabs>
+            </Tabs> 
             <div class={s.inputPad_wrapper}>
-              <InputPad />
+              
+              <InputPad 
+                v-model:happenAt={refHappenAt.value}
+                v-model:amount={refAmount.value}
+              />
             </div>
           </div>
         </>

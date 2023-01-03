@@ -9,8 +9,10 @@ export const Tags = defineComponent({
         kind:{
             type: String as PropType<string>,
             required: true
-        }
+        },
+        selected: Number
     },
+    emits: ['update:selected'],
     setup: (props, context) => {
         const loading = ref(false)
         const { page, tags, hasMore, fetchTags } = useTags(()=>{
@@ -21,21 +23,26 @@ export const Tags = defineComponent({
               _mock: 'tagIndex',
             })
         })
+        const onSelect = (tag:Tag) => {
+            context.emit('update:selected', tag.id)
+        }
         watch(page,()=>{
             loading.value = false
         })
         return () => <>
         <div class={s.tags_wrapper}>
             <div class={s.tag}>
-            <div class={s.sign}>
-                <Icon name="add" class={s.createTag} />
-            </div>
-            <div class={s.name}>
-                新增
-            </div>
+                <div class={s.sign}>
+                    <Icon name="add" class={s.createTag} />
+                </div>
+                <div class={s.name}>
+                    新增
+                </div>
             </div>
             {tags.value.map(tag =>
-            <div class={[s.tag, s.selected]}>
+            <div 
+            onClick = {() =>onSelect(tag)}
+            class={[s.tag, props.selected === tag.id ? s.selected : null]}>
                 <div class={s.sign}>
                 {tag.sign}
                 </div>
