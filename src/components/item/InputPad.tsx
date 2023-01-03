@@ -94,7 +94,7 @@ export const InputPad = defineComponent({
       <div class={s.buttons}>
         {buttons.map(button =>
           (button.text === '提交'&&props.loading) 
-          ?<button><Icon name="loading"></Icon></button>
+          ?<button class={s.loading}><Icon name="loading"></Icon></button>
           :<button onClick={button.onClick}>{button.text}</button>
         )}
       </div>
