@@ -1,4 +1,4 @@
-import { Dialog } from 'vant';
+import { Dialog, Notify } from 'vant';
 import { defineComponent, reactive, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { MainLayout } from '../../layouts/MainLayout';
@@ -11,14 +11,15 @@ import s from './ItemCreate.module.scss';
 import { Tags } from './Tags';
 export const ItemCreate = defineComponent({
   setup: (props, context) => {
+    const loading = ref(false)
     const formData = reactive({
       kind: '支出',
       tags_id:[0],
       amount: 0,
       happen_at: new Date().toISOString(),
     })
-    const router = useRouter()
     const onSubmit = async () => {
+      loading.value = true
       await http.post<Resource<Item>>('/items',formData,
       {params: {_mock: 'itemCreate'}}
       )
@@ -31,7 +32,8 @@ export const ItemCreate = defineComponent({
         }
         throw error
       })
-      router.push("/items")
+      Notify({ type: 'success', message: '记好完成一笔账单！' });
+      loading.value = false
     }
 
     return () => (
@@ -58,6 +60,7 @@ export const ItemCreate = defineComponent({
               <InputPad 
                 v-model:happenAt={formData.happen_at}
                 v-model:amount={formData.amount}
+                loading={loading.value}
                 onSubmit={onSubmit}
               />
             </div>

@@ -9,7 +9,8 @@ export const InputPad = defineComponent({
     amount: Number,
     onSubmit: {
       type : Function as PropType<() => void>
-    }
+    },
+    loading: Boolean,
   },
   setup: (props, context) => {
     const appendText = (n: number | string) => {
@@ -92,7 +93,9 @@ export const InputPad = defineComponent({
       </div>
       <div class={s.buttons}>
         {buttons.map(button =>
-          <button onClick={button.onClick}>{button.text}</button>
+          (button.text === '提交'&&props.loading) 
+          ?<button><Icon name="loading"></Icon></button>
+          :<button onClick={button.onClick}>{button.text}</button>
         )}
       </div>
     </>
