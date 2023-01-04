@@ -1,5 +1,5 @@
 import { defineComponent, onUpdated, PropType, ref, watch } from 'vue';
-import { RouterLink } from 'vue-router';
+import { routerKey, RouterLink, useRouter } from 'vue-router';
 import { Button } from '../../shared/Button';
 import { http } from '../../shared/Http';
 import { Icon } from '../../shared/Icon';
@@ -15,12 +15,14 @@ export const Tags = defineComponent({
     },
     emits: ['update:selected'],
     setup: (props, context) => {
+        const router = useRouter()
         const loading = ref(false)
         const { page, tags, hasMore, fetchTags } = useTags(()=>{
             loading.value = true
             return http.get<Resources<Tag>>('/tags',{
               kind: props.kind,
-              page: page.value + 1
+              page: page.value + 1,
+            //   _mock: 'tagIndex'
             })
         })
         const onSelect = (tag:Tag) => {
@@ -31,10 +33,10 @@ export const Tags = defineComponent({
         })
         const  timer = ref<number>()
         const currentTag = ref<HTMLDivElement>()
-        const onTouchStart = (e: TouchEvent) => {
+        const onTouchStart = (e: TouchEvent, tag: Tag) => {
             currentTag.value = e.currentTarget as HTMLDivElement
             timer.value = setTimeout(()=>{
-                onLongPress()
+                onLongPress(tag.id)
             }, 600)
         }
         const onTouchEnd = (e: TouchEvent) => {
@@ -44,8 +46,9 @@ export const Tags = defineComponent({
             const pointedElement = document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY)
             !(currentTag.value?.contains(pointedElement) || currentTag.value === pointedElement)&&clearTimeout(timer.value)
         }
-        const onLongPress = ()=>{
-            alert('长按')
+        const onLongPress = (id:number)=>{
+            console.log(id)
+            router.push(`/tags/${id}/edit?return_to=${router.currentRoute.value.fullPath}`)
         }
         return () => <>
         <div class={s.tags_wrapper} onTouchmove={onTouchMove}>
@@ -64,7 +67,7 @@ export const Tags = defineComponent({
             <div 
                 onClick = {() =>onSelect(tag)}
                 class={[s.tag, props.selected === tag.id ? s.selected : null]}
-                onTouchstart = {onTouchStart}
+                onTouchstart = {(e)=>{onTouchStart(e, tag)}}
                 onTouchend = {onTouchEnd}
             >
                 <div class={s.sign}>
@@ -77,8 +80,8 @@ export const Tags = defineComponent({
             )}
         </div>
         <div class={s.loadMoreWrapper}>
-            <Button autoSelfDisabled={true} v-show={hasMore.value&&!loading.value} class={s.loadMore} onClick={fetchTags}>加载更多标签</Button> 
-            <div v-show={!hasMore.value&&!loading.value} class={s.noMore}>
+            <Button autoSelfDisabled={true} v-show={hasMore.value&&!loading.value&&tags.value.length>=25} class={s.loadMore} onClick={fetchTags}>加载更多标签</Button> 
+            <div v-show={!hasMore.value&&!loading.value&&tags.value.length>=25} class={s.noMore}>
                 <span>没有更多标签啦</span>
             </div>
             <div v-show={loading.value} class={s.loading}>
