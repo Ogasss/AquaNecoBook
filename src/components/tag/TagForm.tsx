@@ -1,7 +1,10 @@
-import { defineComponent, PropType, reactive, toRaw } from 'vue';
+import { Notify } from 'vant';
+import { defineComponent, onMounted, PropType, reactive, toRaw } from 'vue';
+import { routerKey, useRoute } from 'vue-router';
 import { Button } from '../../shared/Button';
 import { Form, FormItem } from '../../shared/Form';
-import { Rules, validate } from '../../shared/validate';
+import { http } from '../../shared/Http';
+import { hasError, Rules, validate } from '../../shared/validate';
 import s from './Tag.module.scss';
 export const TagForm = defineComponent({
   props: {
@@ -10,30 +13,50 @@ export const TagForm = defineComponent({
     }
   },
   setup: (props, context) => {
+    const route = useRoute()
+    const resetFormDate = ()=>{
+      formData.name = '',
+      formData.sign = '',
+      formData.kind = 'expenses'
+    }
     const formData = reactive({
       name: '',
       sign: '',
-      type: '',
+      kind: 'expenses',
+    })
+    onMounted(()=>{
+      if(route.query.kind){
+        formData.kind = route.query.kind!.toString()
+      }
     })
     const errors = reactive<{ [k in keyof typeof formData]?: string[] }>({})
-    const onSubmit = (e: Event) => {
+    const onError = (error: any) => {
+        Object.assign(errors, error.data.errors)
+      throw error
+    }
+    const onSubmit = async (e: Event) => {
+      e.preventDefault()
       const rules: Rules<typeof formData> = [
         { key: 'name', type: 'required', message: '必填' },
-        { key: 'name', type: 'pattern', regex: /^.{1,4}$/, message: '只能填 1 到 4 个字符' },
         { key: 'sign', type: 'required', message: '必填' },
       ]
       Object.assign(errors, {
-        name: undefined,
-        sign: undefined,
-        type: undefined,
+        name: [],
+        sign: [],
+        kind: [],
       })
       Object.assign(errors, validate(formData, rules))
-      e.preventDefault()
+      if(!hasError(errors)){
+        await http.post('/tags', formData).catch(onError)
+        resetFormDate()
+        Notify({ type: 'success', message: '创建了新的标签！' });
+      }
     }
     return () => (
       <Form onSubmit={onSubmit}>
         <FormItem label='名称'
           type="text"
+          maxlength={4}
           v-model={formData.name}
           error={errors['name']?.[0]} />
         <FormItem label={'符号 ' + formData.sign}
@@ -42,12 +65,12 @@ export const TagForm = defineComponent({
         <FormItem label='类型' type="select" options={[
           { value: 'expenses', text: '支出' },
           { value: 'income', text: '收入' }
-        ]} v-model={formData.type} />
+        ]} v-model={formData.kind} />
         <FormItem>
           <p class={s.tips}>记账时长按标签即可进行编辑</p>
         </FormItem>
         <FormItem>
-          <Button class={[s.button]}>确定</Button>
+          <Button type="submit" class={[s.button]}>确定</Button>
         </FormItem>
       </Form>
     )

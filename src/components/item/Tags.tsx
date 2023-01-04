@@ -20,8 +20,7 @@ export const Tags = defineComponent({
             loading.value = true
             return http.get<Resources<Tag>>('/tags',{
               kind: props.kind,
-              page: page.value + 1,
-              _mock: 'tagIndex',
+              page: page.value + 1
             })
         })
         const onSelect = (tag:Tag) => {
@@ -32,7 +31,7 @@ export const Tags = defineComponent({
         })
         return () => <>
         <div class={s.tags_wrapper}>
-            <RouterLink to="/tags/create">
+            <RouterLink to={`/tags/create?kind=${props.kind}`}>
                 <div class={s.tag}>
                     <div class={s.sign}>
                         <Icon name="add" class={s.createTag} />

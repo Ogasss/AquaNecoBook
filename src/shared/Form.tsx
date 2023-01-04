@@ -30,6 +30,9 @@ export const FormItem = defineComponent({
     type: {
       type: String as PropType<'text' | 'emojiSelect' | 'date' | 'validationCode' | 'select'>,
     },
+    maxlength:{
+      type: Number
+    },
     error: {
       type: String
     },
@@ -64,6 +67,7 @@ export const FormItem = defineComponent({
           return <input
             value={props.modelValue}
             placeholder={props.placeholder}
+            maxlength={props.maxlength}
             onInput={(e: any) => context.emit('update:modelValue', e.target.value)}
             class={[s.formItem, s.input]} />
         case 'emojiSelect':

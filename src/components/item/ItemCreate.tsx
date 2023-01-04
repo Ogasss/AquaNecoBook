@@ -20,9 +20,7 @@ export const ItemCreate = defineComponent({
     })
     const onSubmit = async () => {
       loading.value = true
-      await http.post<Resource<Item>>('/items',formData,
-      {params: {_mock: 'itemCreate'}}
-      )
+      await http.post<Resource<Item>>('/items',formData)
       .catch(error=>{
         if(error.response.status === 422){
           Dialog.alert({
