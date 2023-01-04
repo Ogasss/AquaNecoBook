@@ -13,6 +13,7 @@ export const TagForm = defineComponent({
     const formData = reactive({
       name: '',
       sign: '',
+      type: '',
     })
     const errors = reactive<{ [k in keyof typeof formData]?: string[] }>({})
     const onSubmit = (e: Event) => {
@@ -23,20 +24,25 @@ export const TagForm = defineComponent({
       ]
       Object.assign(errors, {
         name: undefined,
-        sign: undefined
+        sign: undefined,
+        type: undefined,
       })
       Object.assign(errors, validate(formData, rules))
       e.preventDefault()
     }
     return () => (
       <Form onSubmit={onSubmit}>
-        <FormItem label='标签名'
+        <FormItem label='名称'
           type="text"
           v-model={formData.name}
           error={errors['name']?.[0]} />
         <FormItem label={'符号 ' + formData.sign}
           type="emojiSelect" v-model={formData.sign}
           error={errors['sign']?.[0]} />
+        <FormItem label='类型' type="select" options={[
+          { value: 'expenses', text: '支出' },
+          { value: 'income', text: '收入' }
+        ]} v-model={formData.type} />
         <FormItem>
           <p class={s.tips}>记账时长按标签即可进行编辑</p>
         </FormItem>

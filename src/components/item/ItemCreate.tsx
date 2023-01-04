@@ -11,6 +11,7 @@ import s from './ItemCreate.module.scss';
 import { Tags } from './Tags';
 export const ItemCreate = defineComponent({
   setup: (props, context) => {
+    const router = useRouter()
     const loading = ref(false)
     const formData = reactive({
       kind: '支出',
@@ -39,7 +40,7 @@ export const ItemCreate = defineComponent({
     return () => (
       <MainLayout class={s.layout}>{{
         title: () => '记一笔',
-        icon: () => <RouterLink to='/start'><Icon name="left" class={s.navIcon} /></RouterLink>,
+        icon: () => <Icon name="left" class={s.navIcon} onClick={() => { router.go(-1) }}/>,
         default: () => <>
           <div class={s.wrapper}>
             {/* 测试代码 */}

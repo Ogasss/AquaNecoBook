@@ -4,7 +4,7 @@ import { StartPage } from '../../views/StartPage';
 import { ItemSummary } from './ItemSummary';
 export const ItemList = defineComponent({
   setup: (props, context) => {
-    const flag = ref(false)
+    const flag = ref(true)
     return () => <>
     {
       flag.value 
