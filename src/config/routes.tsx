@@ -3,7 +3,7 @@ import { ItemCreate } from "../components/item/ItemCreate";
 import { ItemList } from "../components/item/ItemList";
 import { TagCreate } from "../components/tag/TagCreate";
 import { TagEdit } from "../components/tag/TagEdit";
-import { http } from "../shared/Http";
+import { signInStatus } from "../main";
 import { ItemPage } from "../views/ItemPage";
 import { SignInPage } from "../views/SignInPage";
 import { StartPage } from "../views/StartPage";
@@ -17,7 +17,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/welcome',
     component: Welcome,
     beforeEnter:(to, form, next ) => {
-      localStorage.getItem('skipFlag') === 'yes' ? next('/start') : next()
+      signInStatus ? next('/start') : next()
     }
   },
   { path: '/start', component: StartPage },

@@ -58,9 +58,6 @@ export const Welcome = defineComponent({
       }
     })
     /*不重复触发的变量*/
-    const setSkipFlag = () => {
-      localStorage.setItem('skipFlag','yes')
-    }
     return () => 
     <div class={s.wrapper}>
       <header class={s.header}>
@@ -90,14 +87,14 @@ export const Welcome = defineComponent({
         <h1 class={s.hidden}>占位</h1>
         <h1 onClick={nextCard}>下一页</h1>
         <RouterLink to='/start'>
-          <h1 onClick={setSkipFlag}>跳过</h1>
+          <h1>跳过</h1>
         </RouterLink>
       </footer>
 
       <footer class={s.footer} v-show={cardNumber.value === 3}>
         <h1 class={s.hidden}>占位　</h1>
         <RouterLink to='/start'>
-          <h1 onClick={setSkipFlag}>开启应用！</h1>
+          <h1>开启应用！</h1>
         </RouterLink>
         <h1 class={s.hidden}>占位</h1>
       </footer>

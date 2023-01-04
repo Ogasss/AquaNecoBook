@@ -2,6 +2,7 @@ import { defineComponent, reactive, ref } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { useBool } from '../hooks/useBool';
 import { MainLayout } from '../layouts/MainLayout';
+import { beSignIn, signInStatus } from '../main';
 import { Button } from '../shared/Button';
 import { Form, FormItem } from '../shared/Form';
 import { http } from '../shared/Http';
@@ -30,7 +31,7 @@ export const SignInPage = defineComponent({
       })
       Object.assign(errors, validate(formData, [
         { key: 'email', type: 'required', message: '必填' },
-        { key: 'email', type: 'pattern', regex: /.+@.+/, message: '必须是邮箱地址' },
+        { key: 'email', type: 'pattern', regex: /.+@.+/, message: '邮箱地址格式不正确' },
         { key: 'code', type: 'required', message: '必填' },
       ]))
       if(!hasError(errors)){
@@ -40,13 +41,17 @@ export const SignInPage = defineComponent({
         // router.push('/sign_in?return_to='+ encodeURIComponent(route.fullPath))
         const returnTo = route.query.return_to?.toString()
         refreshMe().then
-        router.push(returnTo || '/start')
+        beSignIn()
+        router.push('/')
       }
     }
 
     const onError = (error: any) => {
-      if(error.response.status === 422){
-        Object.assign(errors, error.response.data.errors)
+      if(error.status === 422){
+        console.log(error.data.errors)
+        Object.assign(errors, {
+          email:['邮箱或验证码不正确']
+        })
       }
       throw error
     }

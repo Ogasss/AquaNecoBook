@@ -8,11 +8,19 @@ import { mePromise, refreshMe, fetchMe } from './shared/me';
 
 const router = createRouter({ history, routes })
 
-fetchMe()
+export let signInStatus = false
+
+fetchMe().then(()=>{
+    signInStatus = true
+})
+
+export const beSignIn = ()=>{
+    signInStatus = true
+}
 
 router.beforeEach(async (to, from)=> {
     // to.path === '/' || to.path === '/welcome'  || to.path === '/start' || to.path.startsWith('/sign_in')
-    if(to.path === '/' || to.path === '/welcome'  || to.path === '/start' || to.path.startsWith('/sign_in')){
+    if(to.path === '/' || to.path === '/welcome'  || to.path.startsWith('/sign_in')){
         return true
     }else{
         const path = mePromise!.then(
