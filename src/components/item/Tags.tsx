@@ -29,8 +29,26 @@ export const Tags = defineComponent({
         watch(page,()=>{
             loading.value = false
         })
+        const  timer = ref<number>()
+        const currentTag = ref<HTMLDivElement>()
+        const onTouchStart = (e: TouchEvent) => {
+            currentTag.value = e.currentTarget as HTMLDivElement
+            timer.value = setTimeout(()=>{
+                onLongPress()
+            }, 600)
+        }
+        const onTouchEnd = (e: TouchEvent) => {
+            clearTimeout(timer.value)
+        }
+        const onTouchMove = (e: TouchEvent) => {
+            const pointedElement = document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY)
+            !(currentTag.value?.contains(pointedElement) || currentTag.value === pointedElement)&&clearTimeout(timer.value)
+        }
+        const onLongPress = ()=>{
+            alert('长按')
+        }
         return () => <>
-        <div class={s.tags_wrapper}>
+        <div class={s.tags_wrapper} onTouchmove={onTouchMove}>
             <RouterLink to={`/tags/create?kind=${props.kind}`}>
                 <div class={s.tag}>
                     <div class={s.sign}>
@@ -44,8 +62,11 @@ export const Tags = defineComponent({
             
             {tags.value.map(tag =>
             <div 
-            onClick = {() =>onSelect(tag)}
-            class={[s.tag, props.selected === tag.id ? s.selected : null]}>
+                onClick = {() =>onSelect(tag)}
+                class={[s.tag, props.selected === tag.id ? s.selected : null]}
+                onTouchstart = {onTouchStart}
+                onTouchend = {onTouchEnd}
+            >
                 <div class={s.sign}>
                 {tag.sign}
                 </div>

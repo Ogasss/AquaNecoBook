@@ -1,4 +1,5 @@
 .tags_wrapper {
+    height: 45vh;
     display: flex;
     flex-wrap: wrap;
     padding-top: 16px;
@@ -28,9 +29,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     .sign {
-      width: 12vw;
-      height: 12vw;
+      width:  80%;
+      height: 70%;
       background: var(--tag-bg);
       border: 1px solid var(--tag-bg);
       border-radius: 50%;
