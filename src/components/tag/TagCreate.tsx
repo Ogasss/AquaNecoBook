@@ -6,7 +6,6 @@ import { Rules, validate } from '../../shared/validate';
 import { TagForm } from './TagForm';
 export const TagCreate = defineComponent({
   setup: (props, context) => {
-    const router = useRouter()
     const formData = reactive({
       name: '',
       sign: '',
@@ -28,7 +27,7 @@ export const TagCreate = defineComponent({
     return () => (
       <MainLayout>{{
         title: () => '新建标签',
-        icon: () => <Icon name="left" onClick={() => { router.go(-1) }} />,
+        icon: () => <Icon name="left"/>,
         default: () => (
           <TagForm />
         )
