@@ -17,7 +17,7 @@ export const routes: RouteRecordRaw[] = [
     path: '/welcome',
     component: Welcome,
     beforeEnter:(to, form, next ) => {
-      signInStatus ? next('/start') : next()
+      localStorage.getItem('jwt') ? next('/start') : next()
     }
   },
   { path: '/start', component: StartPage },

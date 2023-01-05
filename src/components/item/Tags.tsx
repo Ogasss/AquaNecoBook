@@ -47,8 +47,7 @@ export const Tags = defineComponent({
             !(currentTag.value?.contains(pointedElement) || currentTag.value === pointedElement)&&clearTimeout(timer.value)
         }
         const onLongPress = (id:number)=>{
-            console.log(id)
-            router.push(`/tags/${id}/edit?return_to=${router.currentRoute.value.fullPath}`)
+            router.push(`/tags/${id}/edit?kind=${props.kind}?return_to=${router.currentRoute.value.fullPath}`)
         }
         return () => <>
         <div class={s.tags_wrapper} onTouchmove={onTouchMove}>

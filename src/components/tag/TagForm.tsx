@@ -1,25 +1,37 @@
 import { Notify } from 'vant';
 import { defineComponent, onMounted, PropType, reactive, toRaw } from 'vue';
-import { routerKey, useRoute } from 'vue-router';
+import { routerKey, useRoute, useRouter } from 'vue-router';
 import { Button } from '../../shared/Button';
 import { Form, FormItem } from '../../shared/Form';
 import { http } from '../../shared/Http';
+import { onFormError } from '../../shared/onFormError';
 import { hasError, Rules, validate } from '../../shared/validate';
 import s from './Tag.module.scss';
 export const TagForm = defineComponent({
   props: {
-    name: {
-      type: String as PropType<string>
+    id: {
+      type: Number
     }
   },
   setup: (props, context) => {
+    onMounted(async ()=>{
+      if(!props.id){ return }
+      const response = await http.get<Resource<Tag>>(`/tags/${props.id}`)
+      console.log(response)
+      formData.name = response.data.resource.name
+      formData.kind = response.data.resource.kind
+      formData.sign = response.data.resource.sign
+      formData.id = response.data.resource.id
+    })
     const route = useRoute()
+    const router = useRouter()
     const resetFormDate = ()=>{
       formData.name = '',
       formData.sign = '',
       formData.kind = 'expenses'
     }
-    const formData = reactive({
+    const formData = reactive<Partial<Tag>>({
+      id: undefined,
       name: '',
       sign: '',
       kind: 'expenses',
@@ -47,9 +59,15 @@ export const TagForm = defineComponent({
       })
       Object.assign(errors, validate(formData, rules))
       if(!hasError(errors)){
-        await http.post('/tags', formData).catch(onError)
-        resetFormDate()
-        Notify({ type: 'success', message: '创建了新的标签！' });
+        if(formData.id){
+          await http.patch(`tags/${formData.id}`,formData).catch((error)=> onFormError(error, (data)=> Object.assign(errors, data.errors)))
+          router.back()
+          Notify({ type: 'success', message: '标签修改成功！', position: 'bottom' });
+        }else{
+          await http.post('/tags', formData).catch(onError).catch((error)=> onFormError(error, (data)=> Object.assign(errors, data.errors)))
+          resetFormDate()
+          Notify({ type: 'success', message: '创建了新的标签！', position: 'bottom' });
+        }
       }
     }
     return () => (
