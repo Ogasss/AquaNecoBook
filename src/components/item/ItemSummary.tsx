@@ -8,11 +8,11 @@ export const ItemSummary = defineComponent({
   props: {
     startDate: {
       type: String as PropType<string>,
-      required: true,
+      required: false,
     },
     endDate: {
       type: String as PropType<string>,
-      required: true,
+      required: false,
     },
   },
   setup: (props, context) => {
@@ -20,13 +20,18 @@ export const ItemSummary = defineComponent({
     const hasMore = ref(false)
     const page = ref(0)
     const fetchItems = async () => {
+      if(!props.startDate || !props.endDate){
+        return
+      }
       const response = await http.get<Resources<Item>>('/items', {
         happen_after: props.startDate,
         happen_before: props.endDate,
         page: page.value + 1,
       })
       const { resources, pager } = response.data
+      console.log(response.data)
       items.value?.push(...resources)
+      console.log(items.value)
       hasMore.value = (pager.page - 1) * pager.per_page + resources.length < pager.count
       page.value += 1
     }
@@ -53,11 +58,11 @@ export const ItemSummary = defineComponent({
               {items.value.map((item) => (
                 <li>
                   <div class={s.sign}>
-                    <span>{item.tags_id[0]}</span>
+                    <span>{item.tag_ids[0]}</span>
                   </div>
                   <div class={s.text}>
                     <div class={s.tagAndAmount}>
-                      <span class={s.tag}>{item.tags_id[0]}</span>
+                      <span class={s.tag}>{item.tag_ids[0]}</span>
                       <span class={s.amount}>￥<>{item.amount}</></span>
                     </div>
                     <div class={s.time}>{item.happen_at}</div>

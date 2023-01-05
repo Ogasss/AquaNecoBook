@@ -13,7 +13,7 @@ export const ItemCreate = defineComponent({
   setup: (props, context) => {
     const loading = ref(false)
     const formData = reactive({
-      kind: '支出',
+      kind: "支出",
       tags_ids:[0],
       amount: 0,
       happen_at: new Date().toISOString(),
@@ -41,6 +41,7 @@ export const ItemCreate = defineComponent({
       switchKind()
       await http.post<Resource<Item>>('/items',formData)
       .catch(error=>{
+        console.log(error)
         if(error.status === 422){
           Dialog.alert({
             title: '记账错误！',
@@ -63,10 +64,10 @@ export const ItemCreate = defineComponent({
         default: () => <>
           <div class={s.wrapper}>
             {/* 测试代码 */}
-                <div>{formData.kind}</div>
+                {/* <div>{formData.kind}</div>
                 <div>{formData.tags_ids[0]}</div>
                 <div>{formData.amount}</div>
-                <div>{formData.happen_at}</div>
+                <div>{formData.happen_at}</div> */}
             <Tabs v-model:selected={formData.kind} class={s.tabs}>
               <Tab name="支出">
                 <Tags kind="expenses" v-model:selected={formData.tags_ids[0]}/>
