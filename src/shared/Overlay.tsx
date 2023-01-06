@@ -1,8 +1,8 @@
 import { Dialog } from 'vant';
 import { computed, defineComponent, onMounted, PropType, ref, watch } from 'vue';
-import { RouterLink, useRouter } from 'vue-router';
-import { signInStatus } from '../main';
+import { routerKey, RouterLink, useRouter } from 'vue-router';
 import { Icon } from './Icon';
+import { mePromise } from './me';
 import s from './Overlay.module.scss';
 export const Overlay = defineComponent({
   props: {
@@ -11,7 +11,7 @@ export const Overlay = defineComponent({
     }
   },
   setup: (props, context) => {
-    const router = useRouter();
+    const router = useRouter()
     const close = () => {
       props.onClose?.()
     }
@@ -22,30 +22,37 @@ export const Overlay = defineComponent({
       })
         .then(() => {
           localStorage.removeItem('jwt')
-          location.reload()
+          exit()
+          setTimeout(() => {
+            location.reload()
+          }, 1000);
         })
         .catch(() => {
           return null
         });
-      
     }
+    const me = ref<User>()
+    onMounted(async ()=>{
+      const response = await mePromise
+      me.value = response?.data.resource
+    })
     return () => <>
       <div class={s.mask} onClick={close}></div>
       <div class={s.overlay}>
-          {!signInStatus 
+          {!me.value 
           ? 
             <RouterLink to="/sign_in">
               <section class={s.currentUser}>
                 <h2>未登录用户</h2>
-                <p>点击这里登录</p>
+                <p>点击邮箱登录</p>
               </section>
             </RouterLink>
           : <section class={s.currentUser} onClick={ exit }>
             <div class={s.wrapper}>
               <Icon class={s.icon} name="signInIcon"></Icon>
               <div>
-                <h2>要坚持记账哦~</h2>
-                <p>123123123@qq.com</p>
+                <h2>点击退出登录</h2>
+                <p>{me.value.email}</p>
               </div>
             </div>
             </section>

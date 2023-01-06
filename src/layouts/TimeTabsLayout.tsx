@@ -10,12 +10,13 @@ const demo = defineComponent({
   props: {
     startDate: {
       type: String as PropType<string>,
-      required: false
+      required: false,
     },
     endDate: {
       type: String as PropType<string>,
-      required: false
-    }
+      required: false,
+    },
+    
   },
 })
 export const TimeTabsLayout = defineComponent({
@@ -23,6 +24,10 @@ export const TimeTabsLayout = defineComponent({
     component: {
       type: Object as PropType<typeof demo>,
       required: true
+    },
+    renderOnSwitchTab:{
+      type: Boolean as PropType<boolean>,
+      default: false
     }
   },
   setup: (props, context) => {
@@ -33,8 +38,8 @@ export const TimeTabsLayout = defineComponent({
       end: new Time().format()
     })
     const customTime = reactive<{
-      start? :String
-      end?: String
+      start?: string
+      end?: string
     }>({})
     const timeList = [
       {
@@ -68,7 +73,7 @@ export const TimeTabsLayout = defineComponent({
           icon: () => <OverlayIcon />,
           default: () => <>
             <Tabs classPrefix='customTabs' v-model:selected={refSelected.value}
-              onUpdate:selected={onSelect}>
+              onUpdate:selected={onSelect} renderOnSelect={props.renderOnSwitchTab}>
               <Tab name="本月">
                 <props.component
                   startDate={timeList[0].start.format()}

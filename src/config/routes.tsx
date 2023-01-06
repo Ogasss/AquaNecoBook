@@ -3,7 +3,6 @@ import { ItemCreate } from "../components/item/ItemCreate";
 import { ItemList } from "../components/item/ItemList";
 import { TagCreate } from "../components/tag/TagCreate";
 import { TagEdit } from "../components/tag/TagEdit";
-import { signInStatus } from "../main";
 import { ItemPage } from "../views/ItemPage";
 import { SignInPage } from "../views/SignInPage";
 import { StartPage } from "../views/StartPage";
@@ -12,13 +11,10 @@ import { TagPage } from "../views/TagPage";
 import { Welcome } from "../views/Welcome";
 
 export const routes: RouteRecordRaw[] = [
-  { path: '/', redirect: '/welcome' },
+  { path: '/', redirect: '/start' },
   {
     path: '/welcome',
     component: Welcome,
-    beforeEnter:(to, form, next ) => {
-      localStorage.getItem('jwt') ? next('/start') : next()
-    }
   },
   { path: '/start', component: StartPage },
   {

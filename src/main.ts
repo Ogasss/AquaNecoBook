@@ -1,5 +1,5 @@
 import { routes } from './config/routes';
-import { createApp } from 'vue'
+import { computed, createApp, ref } from 'vue'
 import { App } from './App'
 import { createRouter } from 'vue-router'
 import { history } from './shared/history';
@@ -8,14 +8,18 @@ import { mePromise, refreshMe, fetchMe } from './shared/me';
 
 const router = createRouter({ history, routes })
 
-export let signInStatus = false
+export const me = ref<User>()
 
-fetchMe().then(()=>{
-    signInStatus = true
+fetchMe().then(async ()=>{
+    const response = await mePromise
+    me.value = response?.data.resource
+    console.log(me.value)
 })
-
-export const beSignIn = ()=>{
-    signInStatus = true
+export const exit = () => {
+    me.value = undefined
+}
+export const setMe = (value: User | undefined)=>{
+    me.value = value
 }
 
 router.beforeEach(async (to, from)=> {
@@ -25,7 +29,7 @@ router.beforeEach(async (to, from)=> {
     }else{
         const path = mePromise!.then(
             () => true,
-            () => '/sign_in?return_to=' + to.path
+            () => '/sign_in'
         )
         return path
     }

@@ -2,12 +2,12 @@ import { defineComponent, reactive, ref } from 'vue';
 import { RouterLink, useRoute, useRouter } from 'vue-router';
 import { useBool } from '../hooks/useBool';
 import { MainLayout } from '../layouts/MainLayout';
-import { beSignIn, signInStatus } from '../main';
+import { setMe } from '../main';
 import { Button } from '../shared/Button';
 import { Form, FormItem } from '../shared/Form';
 import { http } from '../shared/Http';
 import { Icon } from '../shared/Icon';
-import { refreshMe } from '../shared/me';
+import { mePromise, refreshMe } from '../shared/me';
 import { hasError, validate } from '../shared/validate';
 import s from './SignInPage.module.scss';
 export const SignInPage = defineComponent({
@@ -39,9 +39,12 @@ export const SignInPage = defineComponent({
         .catch(onError)
         localStorage.setItem('jwt',response.data.jwt)
         // router.push('/sign_in?return_to='+ encodeURIComponent(route.fullPath))
-        const returnTo = route.query.return_to?.toString()
-        refreshMe().then
-        beSignIn()
+        refreshMe().then(
+          async ()=>{
+            const response = await mePromise
+            setMe(response?.data.resource)
+          }  
+        )
         router.push('/')
       }
     }
@@ -67,7 +70,9 @@ export const SignInPage = defineComponent({
       <MainLayout>{
         {
           title: () => '登录',
-          icon: () => <RouterLink to="./"><Icon name="left" /></RouterLink>,
+          icon: () => <Icon name="left" onClick={()=>{
+            router.push('/welcome')
+          }}/>,
           default: () => (
             <div class={s.wrapper}>
               <div class={s.logo}>
