@@ -13,7 +13,6 @@ export const me = ref<User>()
 fetchMe().then(async ()=>{
     const response = await mePromise
     me.value = response?.data.resource
-    console.log(me.value)
 })
 export const exit = () => {
     me.value = undefined
