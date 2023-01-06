@@ -1,5 +1,5 @@
 
-import { defineComponent, onMounted, PropType, reactive, ref } from 'vue'
+import { defineComponent, onMounted, PropType, reactive, ref, watch } from 'vue'
 import { Datetime } from '../../shared/ Datetime'
 import { Button } from '../../shared/Button'
 import { FloatButton } from '../../shared/FloatButton'
@@ -21,6 +21,9 @@ export const ItemSummary = defineComponent({
     const items = ref<Item[]>([])
     const hasMore = ref(false)
     const page = ref(0)
+    const itemsBalance = reactive({
+      expenses: 0, income:0, balance: 0 
+    })
     const fetchItems = async () => {
       if(!props.startDate || !props.endDate){return}
       const response = await http.get<Resources<Item>>('/items', {
@@ -33,11 +36,7 @@ export const ItemSummary = defineComponent({
       hasMore.value = (pager.page - 1) * pager.per_page + resources.length < pager.count
       page.value += 1
     }
-    onMounted(fetchItems)
-    const itemsBalance = reactive({
-      expenses: 0, income:0, balance: 0 
-    })
-    onMounted(async ()=>{
+    const fetchItemsBalance = async ()=>{
       if(!props.startDate || !props.endDate){return}
       const response = await http.get('/items/balance',{
         happen_after: props.startDate,
@@ -46,7 +45,24 @@ export const ItemSummary = defineComponent({
         _mock: 'itemIndexBalance',
       })
       Object.assign(itemsBalance,response.data)
+    }
+    watch(()=>[props.startDate, props.endDate], ()=>{
+      items.value = []
+      hasMore.value = false
+      page.value = 0
+      fetchItems()
     })
+    watch(()=>[props.startDate, props.endDate], ()=>{
+      Object.assign(itemsBalance,{
+        expenses: 0, income: 0, balance: 0,
+      })
+      fetchItemsBalance()
+    })
+    onMounted(fetchItems)
+    onMounted(fetchItemsBalance)
+    
+    
+    
     return () => (
       <div class={s.wrapper}>
         {items.value ? (
@@ -69,11 +85,11 @@ export const ItemSummary = defineComponent({
               {items.value.map((item) => (
                 <li>
                   <div class={s.sign}>
-                    <span>{item.tag_ids[0]}</span>
+                    <span>{item.tags[0].sign}</span>
                   </div>
                   <div class={s.text}>
                     <div class={s.tagAndAmount}>
-                      <span class={s.tag}>{item.tag_ids[0]}</span>
+                      <span class={s.tag}>{item.tags[0].name}</span>
                       <span class={s.amount}>￥<Money value={item.amount}></Money></span>
                     </div>
                     <div class={s.time}><Datetime value={item.happen_at}/></div>
