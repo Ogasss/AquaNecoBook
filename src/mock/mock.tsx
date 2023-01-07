@@ -42,6 +42,9 @@ export const mockItemSummary: Mock = (config) => {
       "summary": 600
     }]
   }
+  else{
+    return [404,{}]
+  }
 }
   
 
