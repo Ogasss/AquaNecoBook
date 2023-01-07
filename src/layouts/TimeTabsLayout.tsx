@@ -28,6 +28,10 @@ export const TimeTabsLayout = defineComponent({
     renderOnSwitchTab:{
       type: Boolean as PropType<boolean>,
       default: false
+    },
+    hideThisYear: {
+      type: Boolean,
+      default: false
     }
   },
   setup: (props, context) => {
@@ -72,6 +76,27 @@ export const TimeTabsLayout = defineComponent({
           title: () => '蓝猫记账',
           icon: () => <OverlayIcon />,
           default: () => <>
+          {props.hideThisYear 
+          ? 
+            <Tabs classPrefix='customTabs' v-model:selected={refSelected.value}
+              onUpdate:selected={onSelect} renderOnSelect={props.renderOnSwitchTab}>
+              <Tab name="本月">
+                <props.component
+                  startDate={timeList[0].start.format()}
+                  endDate={timeList[0].end.format()} />
+              </Tab>
+              <Tab name="上月">
+                <props.component
+                  startDate={timeList[1].start.format()}
+                  endDate={timeList[1].end.format()} />
+              </Tab>
+              <Tab name="自定义时间">
+                <props.component
+                  startDate={customTime.start}
+                  endDate={customTime.end} />
+              </Tab>
+            </Tabs>
+          :
             <Tabs classPrefix='customTabs' v-model:selected={refSelected.value}
               onUpdate:selected={onSelect} renderOnSelect={props.renderOnSwitchTab}>
               <Tab name="本月">
@@ -95,6 +120,8 @@ export const TimeTabsLayout = defineComponent({
                   endDate={customTime.end} />
               </Tab>
             </Tabs>
+          }
+            
             <Overlay show={refOverlayVisible.value} class={s.overlay} >
               <div class={s.overlay_inner}>
                 <header>

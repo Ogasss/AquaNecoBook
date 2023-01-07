@@ -4,7 +4,7 @@ import { TimeTabsLayout } from '../layouts/TimeTabsLayout';
 export const StatisticsPage = defineComponent({
   setup: (props, context) => {
     return () => (
-      <TimeTabsLayout renderOnSwitchTab={true} component={Charts} />
+      <TimeTabsLayout renderOnSwitchTab={true} hideThisYear={true} component={Charts} />
     )
   }
 })

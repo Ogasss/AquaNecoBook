@@ -13,7 +13,7 @@ export const Money = defineComponent({
     }
 })
 
-const addZero = (n: number) => {
+export const addZero = (n: number) => {
     const nString = n.toString()
     const dotIndex = nString.indexOf('.')
     if (dotIndex < 0) {

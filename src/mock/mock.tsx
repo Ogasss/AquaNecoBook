@@ -5,16 +5,28 @@ type Mock = (config: AxiosRequestConfig) => [number, any]
 
 faker.setLocale('zh_CN');
 
-export const mockItemSummary: Mock = config => {
-  return [200, {
-    "groups": [
-      { "happen_at": "2023-01-01T00:00:00.000+0800", "amount": 100 },
-      { "happen_at": "2023-01-11T00:00:00.000+0800", "amount": 300 },
-      { "happen_at": "2023-01-21T00:00:00.000+0800", "amount": 200 }
-    ],
-    "summary": 600
-  }]
+export const mockItemSummary: Mock = (config) => {
+  if(config.params.group_by === 'happend_at'){
+    return [200, {
+      "groups": [
+        { "happen_at": "2023-01-01T00:00:00.000+0800", "amount": 100 },
+        { "happen_at": "2023-01-11T00:00:00.000+0800", "amount": 300 },
+        { "happen_at": "2023-01-21T00:00:00.000+0800", "amount": 200 }
+      ],
+      "summary": 600
+    }]
+  }else {
+    return [200,{
+      "groups":[
+        { "tag_id": 1, "tag": {id: 1, name: '通勤' }, amount: 14000},
+        { "tag_id": 2, "tag": {id: 2, name: '餐饮' }, amount: 45500},
+        { "tag_id": 3, "tag": {id: 3, name: '娱乐' }, amount: 25500},
+      ],
+      "summary": 600
+    }]
+  }
 }
+  
 
 export const mockItemIndex: Mock = (config) => {
   const { kind, page } = config.params
