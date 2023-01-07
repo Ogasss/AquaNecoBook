@@ -6,7 +6,8 @@ type Mock = (config: AxiosRequestConfig) => [number, any]
 faker.setLocale('zh_CN');
 
 export const mockItemSummary: Mock = (config) => {
-  if(config.params.group_by === 'happend_at'){
+  const {group_by,kind} = config.params
+  if(group_by === 'happen_at' && kind === "expenses"){
     return [200, {
       "groups": [
         { "happen_at": "2023-01-01T00:00:00.000+0800", "amount": 100 },
@@ -15,12 +16,28 @@ export const mockItemSummary: Mock = (config) => {
       ],
       "summary": 600
     }]
-  }else {
+  }else if(group_by === 'happen_at' && kind === "income"){
+    return [200, {
+      "groups": [
+        { "happen_at": "2023-01-01T00:00:00.000+0800", "amount": 1200000 },
+      ],
+      "summary": 600
+    }]
+  }
+  else if(group_by === 'tag_id' && kind === "expenses"){
     return [200,{
       "groups":[
-        { "tag_id": 1, "tag": {id: 1, name: '通勤' }, amount: 14000},
-        { "tag_id": 2, "tag": {id: 2, name: '餐饮' }, amount: 45500},
-        { "tag_id": 3, "tag": {id: 3, name: '娱乐' }, amount: 25500},
+        { "tag_id": 1, "tag": {id: 1, name: '通勤', sign: faker.internet.emoji()}, amount: 14000},
+        { "tag_id": 2, "tag": {id: 2, name: '餐饮', sign: faker.internet.emoji()}, amount: 45500},
+        { "tag_id": 3, "tag": {id: 3, name: '娱乐', sign: faker.internet.emoji()}, amount: 25500},
+      ],
+      "summary": 600
+    }]
+  }
+  else if(group_by === 'tag_id' && kind === "income"){
+    return [200,{
+      "groups":[
+        { "tag_id": 1, "tag": {id: 1, name: '工资', sign: faker.internet.emoji()}, amount: 1200000},
       ],
       "summary": 600
     }]

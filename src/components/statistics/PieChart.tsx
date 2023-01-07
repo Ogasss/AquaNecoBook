@@ -16,7 +16,7 @@ const defaultOption = {
   series: [
     {
       type: 'pie',
-      radius: '80%',
+      radius: '70%',
       emphasis: {
         itemStyle: {
           shadowBlur: 10,
