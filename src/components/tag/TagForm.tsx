@@ -60,7 +60,7 @@ export const TagForm = defineComponent({
       Object.assign(errors, validate(formData, rules))
       if(!hasError(errors)){
         if(formData.id){
-          await http.patch(`tags/${formData.id}`,formData).catch((error)=> onFormError(error, (data)=> Object.assign(errors, data.errors)))
+          await http.patch(`tags/${formData.id}`,formData, {_autoLoading: true}).catch((error)=> onFormError(error, (data)=> Object.assign(errors, data.errors)))
           router.back()
           Notify({ type: 'success', message: '标签修改成功！', position: 'bottom' });
         }else{

@@ -39,7 +39,7 @@ export const ItemCreate = defineComponent({
     const onSubmit = async () => {
       loading.value = true
       switchKind()
-      await http.post<Resource<Item>>('/items',formData)
+      await http.post<Resource<Item>>('/items',formData, {_autoLoading: true})
       .catch(error=>{
         console.log(error)
         if(error.status === 422){
