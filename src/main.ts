@@ -12,27 +12,45 @@ export const me = ref<User>()
 
 fetchMe().then(async ()=>{
     const response = await mePromise
-    me.value = response?.data.resource
+    me.value = response?.data?.resource
+    router.beforeEach(async (to, from)=> {
+        // to.path === '/' || to.path === '/welcome'  || to.path === '/start' || to.path.startsWith('/sign_in')
+        if(to.path === '/' || to.path === '/welcome'  || to.path.startsWith('/sign_in')){
+            return true
+        }else{
+            if(me.value === undefined){
+                console.log('路由拦截')
+                return 'sign_in'
+            }else{
+                console.log('路由放行')
+                return true
+            }
+        }
+    })
 })
-export const exit = () => {
-    me.value = undefined
-}
-export const setMe = (value: User | undefined)=>{
-    me.value = value
-}
 
 router.beforeEach(async (to, from)=> {
     // to.path === '/' || to.path === '/welcome'  || to.path === '/start' || to.path.startsWith('/sign_in')
     if(to.path === '/' || to.path === '/welcome'  || to.path.startsWith('/sign_in')){
         return true
     }else{
-        const path = mePromise!.then(
-            () => true,
-            () => '/sign_in'
-        )
-        return path
+        if(me.value === undefined){
+            console.log('路由拦截')
+            return 'sign_in'
+        }else{
+            console.log('路由放行')
+            return true
+        }
+        
     }
 })
+
+export const exit = () => {
+    me.value = undefined
+}
+export const setMe = (value: User | undefined)=>{
+    me.value = value
+}
 
 const app = createApp(App)
 app.use(router)

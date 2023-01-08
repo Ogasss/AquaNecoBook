@@ -17,7 +17,7 @@ export const Icon = defineComponent({
   setup: (props, context) => {
     const router = useRouter()
     return () => (
-      <svg class={s.icon} onClick={ props.name === 'left' ? ()=>{router.go(-1)} : props.onClick}>
+      <svg class={s.icon} onClick={ props.name === 'left'&&!props.onClick ? ()=>{router.go(-1)} : props.onClick}>
         <use xlinkHref={'#' + props.name}></use>
       </svg>
     )
