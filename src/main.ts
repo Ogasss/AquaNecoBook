@@ -13,20 +13,6 @@ export const me = ref<User>()
 fetchMe().then(async ()=>{
     const response = await mePromise
     me.value = response?.data?.resource
-    router.beforeEach(async (to, from)=> {
-        // to.path === '/' || to.path === '/welcome'  || to.path === '/start' || to.path.startsWith('/sign_in')
-        if(to.path === '/' || to.path === '/welcome'  || to.path.startsWith('/sign_in')){
-            return true
-        }else{
-            if(me.value === undefined){
-                console.log('路由拦截')
-                return 'sign_in'
-            }else{
-                console.log('路由放行')
-                return true
-            }
-        }
-    })
 })
 
 router.beforeEach(async (to, from)=> {
@@ -34,7 +20,8 @@ router.beforeEach(async (to, from)=> {
     if(to.path === '/' || to.path === '/welcome'  || to.path.startsWith('/sign_in')){
         return true
     }else{
-        if(me.value === undefined){
+        const jwt = localStorage.getItem('jwt')
+        if(jwt === null){
             console.log('路由拦截')
             return 'sign_in'
         }else{
