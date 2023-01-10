@@ -24,7 +24,10 @@ export const Tags = defineComponent({
               page: page.value + 1,
             
             },
-            // {   _mock: 'tagIndex'}
+            {   
+                // _mock: 'tagIndex',
+                _autoLoading: true,
+            }
             )
         })
         const onSelect = (tag:Tag) => {

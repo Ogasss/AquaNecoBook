@@ -14,7 +14,7 @@ export const ItemCreate = defineComponent({
     const loading = ref(false)
     const formData = reactive({
       kind: "支出",
-      tags_ids:[0],
+      tag_ids:[0],
       amount: 0,
       happen_at: new Date().toISOString(),
     })
@@ -70,10 +70,10 @@ export const ItemCreate = defineComponent({
                 <div>{formData.happen_at}</div> */}
             <Tabs v-model:selected={formData.kind} class={s.tabs}>
               <Tab name="支出">
-                <Tags kind="expenses" v-model:selected={formData.tags_ids[0]}/>
+                <Tags kind="expenses" v-model:selected={formData.tag_ids[0]}/>
               </Tab>
               <Tab name="收入">
-                <Tags kind="income" v-model:selected={formData.tags_ids[0]}/>
+                <Tags kind="income" v-model:selected={formData.tag_ids[0]}/>
               </Tab>
             </Tabs> 
             <div class={s.inputPad_wrapper}>

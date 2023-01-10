@@ -22,12 +22,16 @@ export const TagEdit = defineComponent({
       Dialog.confirm({
         message:
           '确定要删除标签吗？',
-      })
-      await http.delete(`/tags/${numberId}`,{
-        withItems: options?.withItems ? 'true' : 'false'
-      },{_autoLoading: true})
-      router.back()
-      Notify({ type: 'success', message: '成功删除标签！', position: 'bottom' });
+      }).then(
+        async ()=>{
+          await http.delete(`/tags/${numberId}`,{
+            with_items: options?.withItems ? 'true' : 'false'
+          },{_autoLoading: true})
+          router.back()
+          Notify({ type: 'success', message: '成功删除标签！', position: 'bottom' });
+        }
+      )
+      
     }
     return () => (
       <MainLayout>{{

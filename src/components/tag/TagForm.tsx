@@ -16,8 +16,9 @@ export const TagForm = defineComponent({
   setup: (props, context) => {
     onMounted(async ()=>{
       if(!props.id){ return }
-      const response = await http.get<Resource<Tag>>(`/tags/${props.id}`)
-      console.log(response)
+      const response = await http.get<Resource<Tag>>(`/tags/${props.id}`,{      },{
+        _autoLoading: true,
+      })
       formData.name = response.data.resource.name
       formData.kind = response.data.resource.kind
       formData.sign = response.data.resource.sign
@@ -67,6 +68,7 @@ export const TagForm = defineComponent({
           await http.post('/tags', formData).catch(onError).catch((error)=> onFormError(error, (data)=> Object.assign(errors, data.errors)))
           resetFormDate()
           Notify({ type: 'success', message: '创建了新的标签！', position: 'bottom' });
+          router.back()
         }
       }
     }

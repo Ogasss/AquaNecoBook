@@ -22,10 +22,8 @@ router.beforeEach(async (to, from)=> {
     }else{
         const jwt = localStorage.getItem('jwt')
         if(jwt === null){
-            console.log('路由拦截')
             return 'sign_in'
         }else{
-            console.log('路由放行')
             return true
         }
         
