@@ -14,7 +14,7 @@ import s from './SignInPage.module.scss';
 export const SignInPage = defineComponent({
   setup: (props, context) => {
     const formData = reactive({
-      email: '2309704992@qq.com',
+      email: '',
       code: ''
     })
     const errors = reactive({
