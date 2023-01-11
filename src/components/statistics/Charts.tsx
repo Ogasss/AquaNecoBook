@@ -6,10 +6,6 @@ import { PieChart } from './PieChart';
 import { Bars } from './Bars';
 import { http } from '../../shared/Http';
 import { Time } from '../../shared/time';
-import { Icon } from '../../shared/Icon';
-import { Button } from '../../shared/Button'
-import { RouterLink } from 'vue-router';
-import { Notify } from 'vant';
 import { None } from '../../shared/None';
 
 const DAY = 24 * 60 * 60 * 1000
@@ -77,6 +73,10 @@ export const Charts = defineComponent({
 
 
     const fetchData1 = async () => {
+      if(props.startDate === undefined && props.endDate === undefined){
+        hide.value = true
+        return
+      }
       const response = await http.get<{groups: Data1, summary: number}>('/items/summary',{
         happen_after: props.startDate,
         happen_before: props.endDate,
@@ -97,6 +97,10 @@ export const Charts = defineComponent({
 
     
     const fetchData2 = async () => {
+      if(props.startDate === undefined && props.endDate === undefined){
+        hide.value = true
+        return
+      }
       const response = await http.get<{groups: Data2, summary: number}>('/items/summary',{
         happen_after: props.startDate,
         happen_before: props.endDate,
@@ -115,20 +119,14 @@ export const Charts = defineComponent({
     }
     onMounted(fetchData2)
 
-    watch(()=> kind.value,()=>{
+    watch(()=> [props.startDate,props.endDate,kind.value],()=>{
       fetchData1()
       fetchData2()
     })
 
-    watch(()=> hide,()=>{
-      console.log(hide.value)
-    })
 
     return () => <>
-    {
-      !hide.value
-      ?
-      <div class={s.wrapper}>
+      <div v-show={!hide.value} class={s.wrapper}>
         <FormItem label='类型' type="select" options={[
           { value: 'expenses', text: '支出' },
           { value: 'income', text: '收入' }
@@ -137,12 +135,9 @@ export const Charts = defineComponent({
         <PieChart data={betterData2.value}/>
         <Bars data={betterData3.value}/>
       </div>
-      :
-      <div>
+      <div v-show={hide.value}>
         <None/>
       </div>
-    }
-      
     </>
   }
 })

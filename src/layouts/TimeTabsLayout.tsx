@@ -1,4 +1,4 @@
-import { Overlay } from 'vant';
+import { Notify, Overlay } from 'vant';
 import { Component, DefineComponent, defineComponent, PropType, reactive, ref } from 'vue';
 import { Form, FormItem } from '../shared/Form';
 import { OverlayIcon } from '../shared/Overlay';
@@ -62,6 +62,16 @@ export const TimeTabsLayout = defineComponent({
     const refOverlayVisible = ref(false)
     const onSubmitCustomTime = (e: Event) => {
       e.preventDefault()
+      const startCuo = new Time(tempTime.start).date.getTime()
+      const endCuo = new Time(tempTime.end).date.getTime()
+      if(tempTime.start === tempTime.end){
+        Notify({ type: 'warning', message: '开始时间与结束时间相同！', position: 'bottom' });
+        return
+      }
+      if(startCuo > endCuo){
+        Notify({ type: 'warning', message: '开始时间应当比结束时间早！', position: 'bottom' });
+        return
+      }
       refOverlayVisible.value = false
       Object.assign(customTime, tempTime)
     }

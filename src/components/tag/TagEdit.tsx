@@ -20,8 +20,8 @@ export const TagEdit = defineComponent({
     }
     const onDelete = async (options? :{withItems?: boolean})=>{
       Dialog.confirm({
-        message:
-          '确定要删除标签吗？',
+        title:'你确定要删除标签吗？',
+        message:'会同时删除该标签所记的账单。',
       }).then(
         async ()=>{
           await http.delete(`/tags/${numberId}`,{
@@ -31,7 +31,6 @@ export const TagEdit = defineComponent({
           Notify({ type: 'success', message: '成功删除标签！', position: 'bottom' });
         }
       )
-      
     }
     return () => (
       <MainLayout>{{
@@ -41,7 +40,6 @@ export const TagEdit = defineComponent({
           <TagForm id={numberId} />
           <div class={s.actions}>
             <Button level='danger' class={s.removeTags} onClick={() =>  onDelete() }>删除标签</Button>
-            <Button level='danger' class={s.removeTagsAndItems} onClick={() =>  onDelete({withItems: true}) }>删除标签及账单</Button>
           </div>
         </>
       }}</MainLayout>

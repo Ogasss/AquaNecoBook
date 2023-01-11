@@ -42,7 +42,7 @@ export const Tags = defineComponent({
             currentTag.value = e.currentTarget as HTMLDivElement
             timer.value = setTimeout(()=>{
                 onLongPress(tag.id)
-            }, 600)
+            }, 400)
         }
         const onTouchEnd = (e: TouchEvent) => {
             clearTimeout(timer.value)
