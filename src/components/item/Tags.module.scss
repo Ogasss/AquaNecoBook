@@ -1,0 +1,52 @@
+.tags_wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 16px;
+}
+
+.loadMoreWrapper{
+    margin-top: -16px;
+    padding-bottom: 16px;
+    text-align: center;
+    .loadMore{
+        opacity: 0.4;
+    }
+    .noMore{
+        margin-top: 27px;
+        color: #333;
+        opacity: 0.4;
+    }
+    .loading{
+        height: 72px;
+    }
+}
+
+.tag {
+    position: relative;
+    width: 20vw;
+    height: calc(20vw * 1.14);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .sign {
+      width:  80%;
+      height: 70%;
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-bg);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .name {
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    &.selected {
+      .sign {
+        border-color: var(--main);
+      }
+    }
+  }
+  
