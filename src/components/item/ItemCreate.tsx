@@ -39,20 +39,23 @@ export const ItemCreate = defineComponent({
     const onSubmit = async () => {
       loading.value = true
       switchKind()
-      await http.post<Resource<Item>>('/items',formData, {_autoLoading: true})
-      .catch(error=>{
-        console.log(error)
-        if(error.status === 422){
-          Dialog.alert({
-            title: '记账错误！',
-            message: Object.values(error.data.errors).join('\n'),
-          })
+      
+      
+      const res = await http.post<Resource<Item>>('/items',formData, {_autoLoading: true})
+      console.log(res)
+      if(res.response!==undefined && res.response.status === 422){
+        if(res.response.data.errors.tag_ids !== undefined && res.response.data.errors.tag_ids[0] === '不属于当前用户'){
+          res.response.data.errors.tag_ids[0] = '请选择备注标签'
         }
-        loading.value = false
-        switchKind()
-        throw error
-      })
-      Notify({ type: 'success', message: '记好完成一笔账单！', position: 'bottom' })
+        const str = Object.values(res.response.data.errors).join('\n')
+        Dialog.alert({
+          title:'记账错误！',
+          message: str
+        })
+      }
+      if(res.status !== undefined && res.status === 200){
+        Notify({ type: 'success', message: '记好完成一笔账单！', position: 'bottom' })
+      }
       switchKind()
       loading.value = false
     }

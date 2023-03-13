@@ -13,19 +13,19 @@ fetchMe().then(
         async ()=>{
             const response = await mePromise
             me.value = response?.data?.resource
-            // const jwt = localStorage.getItem('jwt')
-            // if(me.value === undefined && jwt !== null){
-            //     localStorage.removeItem('jwt')
-            // }
+            const jwt = localStorage.getItem('jwt')
+            if(me.value === undefined && jwt !== null){
+                localStorage.removeItem('jwt')
+            }
         },
     )
 
 router.beforeEach((to, from)=> {
     // to.path === '/' || to.path === '/welcome'  || to.path === '/start' || to.path.startsWith('/sign_in')
     const jwt = localStorage.getItem('jwt')
-    if(me.value === undefined && jwt !== null){
-        localStorage.removeItem('jwt')
-    }
+    // if(me.value === undefined && jwt !== null){
+    //     localStorage.removeItem('jwt')
+    // }
     if(to.path === '/' || to.path === '/welcome'  || to.path.startsWith('/sign_in')){
         // alert(from.path+to.path)
         return true

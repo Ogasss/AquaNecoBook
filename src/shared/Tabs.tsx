@@ -14,6 +14,7 @@ export const Tabs = defineComponent({
       default: false,
       required: false
     }
+    //该选项控制使用v-show渲染tab还是v-if渲染tab
   },
   emits: ['update:selected'],
   setup: (props, context) => {

@@ -22,10 +22,8 @@ export const Tags = defineComponent({
             return http.get<Resources<Tag>>('/tags',{
               kind: props.kind,
               page: page.value + 1,
-            
             },
             {   
-                // _mock: 'tagIndex',
                 _autoLoading: true,
             }
             )
@@ -36,7 +34,7 @@ export const Tags = defineComponent({
         watch(page,()=>{
             loading.value = false
         })
-        const  timer = ref<number>()
+        const timer = ref<number>()
         const currentTag = ref<HTMLDivElement>()
         const onTouchStart = (e: TouchEvent, tag: Tag) => {
             currentTag.value = e.currentTarget as HTMLDivElement

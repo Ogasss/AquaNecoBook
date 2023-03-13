@@ -4,6 +4,7 @@ import { routerKey, RouterLink, useRouter } from 'vue-router';
 import { Icon } from './Icon';
 import { mePromise } from './me';
 import s from './Overlay.module.scss';
+
 export const Overlay = defineComponent({
   props: {
     onClose: {
@@ -25,11 +26,8 @@ export const Overlay = defineComponent({
           exit()
           setTimeout(() => {
             location.reload()
-          }, 1000);
+          }, 200);
         })
-        .catch(() => {
-          return null
-        });
     }
     const me = ref<User>()
     onMounted(async ()=>{
@@ -65,12 +63,6 @@ export const Overlay = defineComponent({
                 <span>我要记账</span>
               </RouterLink>
             </li>
-            {/* <li>
-              <RouterLink to="/tags/create" class={s.action}>
-                <Icon name="tagsCreate" class={s.icon} />
-                <span>标签创建</span>
-              </RouterLink>
-            </li> */}
             <li>
               <RouterLink to="/items" class={s.action}>
                 <Icon name="itemslist" class={s.icon} />

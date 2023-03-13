@@ -6,8 +6,6 @@ import { Icon } from '../shared/Icon';
 import s from './Welcome.module.scss'
 
 export const Welcome = defineComponent({
-  
-
   setup: (props, context) => {
     /*轮播切换的变量*/
     const cardContent = [
@@ -42,8 +40,8 @@ export const Welcome = defineComponent({
     }
     /*滑动手势的变量*/
     const main = ref<HTMLElement>()//用ref标签main
-    const { direction, swiping, distance, start, end } = useSwipe(main, { beforeStart: e => e.preventDefault()})//从滑动事件中取出距离与方向
-    let swipable = true
+    const { direction, swiping } = useSwipe(main)//从滑动事件中取出距离与方向
+    let swipable = true/*不重复触发的变量*/
     watchEffect(()=>{
       if( swiping.value && swipable){
         if(direction.value === 'left'){
@@ -57,7 +55,7 @@ export const Welcome = defineComponent({
         }, 400);
       }
     })
-    /*不重复触发的变量*/
+    
     return () => 
     <div class={s.wrapper}>
       <header class={s.header}>
